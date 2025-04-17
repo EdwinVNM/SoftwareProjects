@@ -1,0 +1,67 @@
+#Part 1
+
+# Read the grid from the file
+with open('in4.txt') as f:
+    grid = [line.strip() for line in f.readlines()]
+
+# Define the target word
+target = "XMAS"
+target_length = len(target)
+
+# Dimensions of the grid
+rows = len(grid)
+cols = len(grid[0])
+
+# Directions for checking: horizontal, vertical, and diagonal (all 8 directions)
+directions = [
+    (0, 1),  # Right (horizontal)
+    (0, -1), # Left (horizontal)
+    (1, 0),  # Down (vertical)
+    (-1, 0), # Up (vertical)
+    (1, 1),  # Down-Right diagonal
+    (-1, -1),# Up-Left diagonal
+    (1, -1), # Down-Left diagonal
+    (-1, 1), # Up-Right diagonal
+]
+
+# Function to check if "XMAS" is found starting from a specific position in a given direction
+def find_word(r, c, dr, dc):
+    for i in range(target_length):
+        nr = r + dr * i
+        nc = c + dc * i
+        if not (0 <= nr < rows and 0 <= nc < cols) or grid[nr][nc] != target[i]:
+            return False
+    return True
+
+# Count all occurrences of "XMAS"
+count = 0
+
+for r in range(rows):
+    for c in range(cols):
+        # Check all directions for "XMAS"
+        for dr, dc in directions:
+            if find_word(r, c, dr, dc):
+                count += 1
+
+# Output the total count
+print(count)
+
+
+#Part 2
+
+file_path = "in4.txt"
+
+with open(file_path, 'r') as f:
+    grid = [list(line.strip()) for line in f.readlines()]
+
+def find_all_x_mas(word_search):
+    x_mas_amount = 0
+    for x in range(1, len(word_search) - 1):  # Avoid edges
+        for y in range(1, len(word_search[0]) - 1):  # Avoid edges
+            if word_search[x][y] == "A" \
+            and {word_search[x - 1][y - 1], word_search[x + 1][y + 1]} == {"M", "S"} \
+            and {word_search[x + 1][y - 1], word_search[x - 1][y + 1]} == {"M", "S"}:
+                x_mas_amount += 1
+    return x_mas_amount
+
+print(find_all_x_mas(grid))
