@@ -16,7 +16,7 @@ def startServer(): serverObject = socket.socket() #creating our server server = 
 
  print("waiting for connection....") return serverObject 
 
-def receiveClient(serverObject): port = 2003 # hard coded port number #serverObject.bind(("192.168.1.14", port))# setting up server serverObject.bind(("172.20.10.3", port))# setting up server serverObject.listen(5) # serverObject waits 5 seconds for a response (client,addr) = serverObject.accept() # assigns (client,addr) to the serverObject.accept() print("Got a connection from " + str(addr)) return client 
+def receiveClient(serverObject): port = 2003 # hard coded port number #serverObject.bind(("<IPADDRESS>", port))# setting up server serverObject.bind(("<IPADDRESS>", port))# setting up server serverObject.listen(5) # serverObject waits 5 seconds for a response (client,addr) = serverObject.accept() # assigns (client,addr) to the serverObject.accept() print("Got a connection from " + str(addr)) return client 
 
 def addToArray(client, string): data = client.recv(1) # server receives input of temp or humidity menu = data.decode("utf-8") # assigns input to menu variable 
 
