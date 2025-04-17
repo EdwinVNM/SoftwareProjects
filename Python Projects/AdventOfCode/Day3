@@ -1,0 +1,15 @@
+import re
+
+# Read the content of the file
+d = open('in3.txt').read()
+
+# Iterate over both the original content and the content with 'don't()' sections removed
+for s in d, re.sub(r'don\'t\(\)[\s\S]*?(do\(\)|$)', '', d):
+    # Find all mul(x, y) patterns in the string
+    muls = re.findall(r'mul\((\d+),(\d+)\)', s)
+
+    # Calculate the sum of all x * y values for each mul(x, y)
+    result = sum(int(x) * int(y) for x, y in muls)
+
+    # Print the result for the current string
+    print(result)
