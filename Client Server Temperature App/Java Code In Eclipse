@@ -1,0 +1,245 @@
+package softDevConDev2_1;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Assessment3 extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
+	
+	JFrame myWindow = new JFrame("Temperature and Humidity Sensor");
+	private static JButton tempButton;
+    private static JButton humidityButton;
+    private static JButton maxButton;
+    private static JButton minButton;
+    private static JButton averageButton;
+    private static JButton printButton;
+    private static JLabel statusLabel = new JLabel("Click one of the buttons above to check Temperature or Humidity.");
+    private static JLabel statusLabel1 = new JLabel("Click one of the buttons above to get the minimum, maximum, average, or print.");
+    private static String menu;
+    private static String menuSelection;
+
+    public static void main(String[] args) throws Exception, InterruptedException {
+
+    	Assessment3 myWindow = new Assessment3("Temperature and Humidity Sensor"); // Title of the window
+    	
+    	myWindow.setSize(600, 600); // Allows you to change the size of the window
+        myWindow.setVisible(true); // Visible window
+        
+        //InetAddress inet = InetAddress.getByName("<IPADDRESS>");//set up address of server
+        InetAddress inet = InetAddress.getByName("<IPADDRESS>");//set up address of server
+		//create socket using server IP address and port...
+		Socket s = new Socket(inet, 2003);
+        // sets up the writeToServer object which will be used to send data
+		DataOutputStream writeToServer = new DataOutputStream(s.getOutputStream());
+		
+		// actionListener method for each button, sends the appropriate data to the Python server
+		// printButton actionListener
+		printButton.addActionListener(e -> {
+			System.out.println("All data will be returned...");
+			menuSelection = "1";
+			try {
+				writeToServer.writeBytes(menu);
+				writeToServer.writeBytes(menuSelection);
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				System.out.println("Poxy fiend.");
+			}
+		});
+
+		// averageButton actionListener
+		averageButton.addActionListener(e -> {
+			System.out.println("Average data will be returned...");
+			menuSelection = "2";
+			try {
+				writeToServer.writeBytes(menu);
+				writeToServer.writeBytes(menuSelection);
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				System.out.println("Poxy fiend.");
+			}
+		});
+		
+		// maxButton actionListener
+		maxButton.addActionListener(e -> {
+			System.out.println("Max data will be returned...");
+			menuSelection = "3";
+			try {
+				writeToServer.writeBytes(menu);
+				writeToServer.writeBytes(menuSelection);
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				System.out.println("Poxy fiend.");
+			}
+		});
+		
+		// minButton actionListener
+		minButton.addActionListener(e -> {
+			System.out.println("Min data will be returned...");
+			menuSelection = "4";
+			try {
+				writeToServer.writeBytes(menu);
+				writeToServer.writeBytes(menuSelection);
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				System.out.println("Poxy fiend.");
+			}
+		});
+  		
+  		// Read back the response from the server
+  		//input from the socket (s)
+
+		//wait patiently....
+		Thread.sleep(1000);
+		//input from the socket (s)
+		InputStream in = s.getInputStream();
+		//scanner object to access the input
+		Scanner scanner = new Scanner(in);
+		//inputLine is the next (only) line in our "document"
+		String inputLine = scanner.nextLine();
+		
+		System.out.println("inputLine = "+inputLine);//print entire line
+		
+		scanner.close();		
+ 
+  		String[] data = inputLine.split(" ");//create array that splits on the space
+  		
+  		double result = Double.parseDouble(data[0]); // changes first value of received data to a double for display
+  		System.out.println("data[0] = "+result); // prints result to console for testing purposes
+  		
+  		for(String i: data) {
+  			System.out.println(i + ", ");
+  		}
+		System.out.print("Length of data array = "+data.length);//print length of String array
+		
+		statusLabel1.setText("Result: "+result); // displays received data on GUI interface
+		
+		// if temperature selected
+		if (menu.equals("1")) {
+			if (result > 22) {
+				tempButton.setBackground(Color.red); // changes tempButton colour to red if above 22 degrees
+			}
+			else if (result <= 22  && result > 14) {
+				tempButton.setBackground(Color.green); // changes tempButton colour to green if between 14 and 22
+			}
+			else if (result <= 14) {
+				tempButton.setBackground(Color.blue); // changes tempButton colour to blue if below 14
+			}
+			else {
+				tempButton.setBackground(Color.white); // defaults to white if result is outside the range
+			}
+		}
+		
+		// if humidity selected
+		else if(menu.equals("2")) {
+			if (result > 65) {
+				humidityButton.setBackground(Color.red); // changes humidityButton colour to red if above 65% humidity
+			}
+			else if (result <= 65  && result > 55) {
+				humidityButton.setBackground(Color.green); // changes humidityButton colour to green if between 55% and 65% humidity
+			}
+			else if (result <= 55) {
+				humidityButton.setBackground(Color.blue); // changes humidityButton colour to blue if below 55% humidity
+			}
+			}
+			else {
+				humidityButton.setBackground(Color.white); // defaults to white if result is outside the range
+			}
+		}
+
+    public Assessment3(String title) {
+    	super(title);
+        setLayout(new FlowLayout());
+
+        tempButton = new JButton("Check Temperature"); // creates a button named "Check Temperature".
+        tempButton.setBackground(Color.gray); // makes the colour of the button gray
+        tempButton.setPreferredSize(new Dimension(200, 50)); // size of the button
+        tempButton.addActionListener(this); // adds functionality so button can be used
+
+        humidityButton = new JButton("Check Humidity"); // creates a button named "Check Humidity".
+        humidityButton.setBackground(Color.gray); // makes the colour of the button gray
+        humidityButton.setPreferredSize(new Dimension(200, 50)); // size of the button
+        humidityButton.addActionListener(this); // adds functionality so button can be used
+
+        maxButton = new JButton("Get Max"); // creates a button named "Get Max".
+        maxButton.setBackground(Color.gray); // makes the colour of the button gray
+        maxButton.setPreferredSize(new Dimension(125, 50)); // size of the button
+        maxButton.addActionListener(this); // adds functionality so button can be used
+
+        minButton = new JButton("Get Min"); // creates a button named "Get Min".
+        minButton.setBackground(Color.gray); // makes the colour of the button gray
+        minButton.setPreferredSize(new Dimension(125, 50)); // size of the button
+        minButton.addActionListener(this); // adds functionality so button can be used
+        
+        averageButton = new JButton("Get Average"); // creates a button named "Get Average".
+        averageButton.setBackground(Color.gray); // makes the colour of the button gray
+        averageButton.setPreferredSize(new Dimension(125, 50)); // size of the button
+        averageButton.addActionListener(this); // adds functionality so button can be used
+
+        printButton = new JButton("Print All"); // creates a button named "Get Print".
+        printButton.setBackground(Color.gray); // makes the colour of the button gray
+        printButton.setPreferredSize(new Dimension(125, 50)); // size of the button
+        printButton.addActionListener(this); // adds functionality so button can be used
+        
+        // text explaining meaning of displayed colour
+        JLabel hotLabel = createStatusLabel("Displays RED if Temperature or Humidity is Too Hot", Color.RED);
+        JLabel comfortableLabel = createStatusLabel("Displays GREEN if Temperature or Humidity is Comfortable", Color.GREEN);
+        JLabel coldLabel = createStatusLabel("Displays BLUE if Temperature or Humidity is Too Cold", Color.BLUE);
+
+        // button panel to position the top 2 buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(tempButton);
+        buttonPanel.add(humidityButton);
+
+        // button panel to position the bottom 4 buttons
+        JPanel additionalButtonPanel = new JPanel();
+        additionalButtonPanel.add(maxButton);
+        additionalButtonPanel.add(minButton);
+        additionalButtonPanel.add(averageButton);
+        additionalButtonPanel.add(printButton);
+
+        add(buttonPanel);
+        add(statusLabel);
+        add(hotLabel);
+        add(comfortableLabel);
+        add(coldLabel);
+        add(additionalButtonPanel);
+        add(statusLabel1);
+
+        pack();
+        setLocationRelativeTo(null);
+        
+        
+    }
+
+    private JLabel createStatusLabel(String text, Color color) {
+        JLabel label = new JLabel(text);
+        label.setForeground(color);
+        return label;
+}
+ 
+    // handles inputs for when temperature or humidity buttons are pressed
+	@Override
+    public void actionPerformed(ActionEvent e){
+		if (e.getSource().equals(tempButton)) {
+			statusLabel.setText("Temperature Selected");
+			System.out.println("Temperature Selected");
+			menu = "1";
+		}
+		else if (e.getSource().equals(humidityButton)) {
+			statusLabel.setText("Humidity Selected");
+			System.out.println("Humidity Selected");
+			menu = "2";
+		}
+	}
+}
