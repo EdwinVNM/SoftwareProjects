@@ -12,4 +12,4 @@ Agile Newsagent Project: https://github.com/iecloudbird/SoftwareEngineering3
 
 JDBC: https://github.com/EdwinVNM/sports-car-jdbc
 
-Car performance estimator: https://github.com/EdwinVNM/CarPerformanceEstimator
+Car Performance Estimator: https://github.com/EdwinVNM/CarPerformanceEstimator
